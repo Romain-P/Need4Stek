@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Sat Jun  3 20:26:15 2017 romain pillot
-** Last update Sat Jun  3 23:16:34 2017 romain pillot
+** Last update Sat Jun  3 23:24:49 2017 romain pillot
 */
 
 #include "ai.h"
@@ -39,9 +39,9 @@ static void	send_message_private(const t_message *msg,
   if (msg->param_type == NONE)
     printf("%s\n", msg->data);
   else if (msg->param_type == FLOAT_PARAM)
-    printf("%s:%f\n", param_float);
+    printf("%s:%f\n", msg->data, param_float);
   else if (msg->param_type == INTEGER_PARAM)
-    printf("%s:%d\n", param_int);
+    printf("%s:%d\n", msg->data, param_int);
 }
 
 void	send_message(const t_message *msg,

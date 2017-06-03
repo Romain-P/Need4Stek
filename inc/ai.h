@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Tue May 23 14:02:04 2017 romain pillot
-** Last update Sat Jun  3 23:17:07 2017 romain pillot
+** Last update Sat Jun  3 23:22:42 2017 romain pillot
 */
 
 #ifndef AI_H_
@@ -45,7 +45,7 @@ typedef enum	s_param
 
 typedef struct		s_message
 {
-  const char		*data;
+  const char		(* const data);
   const t_param		param_type;
   const t_answer	answer_type;
 }			t_message;

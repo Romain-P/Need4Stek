@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Thu Nov 24 11:14:29 2016 romain pillot
-** Last update Sat Jun  3 23:18:07 2017 romain pillot
+** Last update Sat Jun  3 23:25:07 2017 romain pillot
 */
 
 #include "ai.h"
@@ -28,6 +28,8 @@ static t_message const	messages[] = {
 
 int	main(int ac, char **args)
 {
-  
+  (void) ac;
+  (void) args;
+  (void) messages;
   return (EXIT_SUCCESS);
 }
