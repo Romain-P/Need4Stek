@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Sat Jun  3 20:26:15 2017 romain pillot
-** Last update Sun Jun  4 16:44:35 2017 romain pillot
+** Last update Sun Jun  4 16:58:58 2017 romain pillot
 */
 
 #include "ai.h"
@@ -59,43 +59,48 @@ static void	send_message_private(const t_message *msg,
     printf("%s:%d\n", msg->data, param_int);
 }
 
-void	send_message(const int msg_id,
+bool	send_message(const int msg_id,
 		     const int param_int,
 		     const float param_float)
 {
   char	**split;
+  bool	end;
 
   send_message_private(&(messages[msg_id]), param_int, param_float);
   split = get_data(0);
   if (str_equals(split[1], COMMAND_FAILURE))
     printf("error: %s\n", split[2]);
+  end = str_equals(split[tab_length(split) - 1], END);
   TAB_FREE(split);
+  return (end);
 }
 
-float			get_float(const int msg_id,
+bool			get_float(const int msg_id,
 				  const int param_int,
-				  const float param_float)
+				  const float param_float,
+				  float *value)
 {
   char			**split;
-  float			value;
   const t_message	*msg;
+  bool			end;
 
   msg = &(messages[msg_id]);
   if (msg->answer_type != FLOAT)
     {
       printf("sender: %s\n", "invalid answer type");
-      return (0.0);
+      return (false);
     }
   send_message_private(msg, param_int, param_float);
   if (!(split = get_data(1)) || str_equals(split[1], COMMAND_FAILURE))
     printf("error: %s\n", split ? split[2] : "internal");
   else
-    value = atof(split[3]);
+    *value = atof(split[3]);
+  end = str_equals(split[tab_length(split) - 1], END);
   TAB_FREE(split);
-  return (value);
+  return (end);
 }
 
-void			get_float_array(const int msg_id,
+bool			get_float_array(const int msg_id,
 					const int param_int,
 					const float param_float,
 					float array[32])
@@ -103,12 +108,13 @@ void			get_float_array(const int msg_id,
   char			**split;
   int			i;
   const t_message	*msg;
+  bool			end;
 
   msg = &(messages[msg_id]);
   if (msg->answer_type != FLOAT_ARRAY)
     {
       printf("sender: %s\n", "invalid answer type");
-      return ;
+      return (false);
     }
   send_message_private(msg, param_int, param_float);
   if (!(split = get_data(32)) || str_equals(split[1], COMMAND_FAILURE))
@@ -119,5 +125,7 @@ void			get_float_array(const int msg_id,
       while (++i < ARRAY_SIZE && split[i + 3])
 	array[i] = atof(split[i + 3]);
     }
+  end = str_equals(split[tab_length(split) - 1], END);
   TAB_FREE(split);
+  return (end);
 }

@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Tue May 23 14:02:04 2017 romain pillot
-** Last update Sun Jun  4 16:41:02 2017 romain pillot
+** Last update Sun Jun  4 16:53:33 2017 romain pillot
 */
 
 #ifndef AI_H_
@@ -13,6 +13,7 @@
 
 # define COMMAND_SUCCESS	("OK")
 # define COMMAND_FAILURE	("KO")
+# define END			("Track Cleared")
 
 # define ARRAY_SIZE		(32)
 
@@ -27,6 +28,8 @@
 # define MESSAGE_SPEED_MAX	(8)
 # define MESSAGE_SPEED_MIN	(9)
 # define MESSAGE_INFO_SIMETIME	(10)
+
+# include <stdbool.h>
 
 typedef enum	s_answer
 {
@@ -50,16 +53,17 @@ typedef struct		s_message
   const t_answer	answer_type;
 }			t_message;
 
-float	get_float(const int msg_id,
+bool	get_float(const int msg_id,
 		  const int param_int,
-		  const float param_float);
+		  const float param_float,
+		  float *value);
 
-void	get_float_array(const int msg_id,
+bool	get_float_array(const int msg_id,
 			const int _int,
 			const float _float,
 			float array[42]);
 
-void	send_message(const int msg_id,
+bool	send_message(const int msg_id,
 		     const int _int,
 		     const float _float);
 

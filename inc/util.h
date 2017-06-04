@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Tue May 23 14:02:04 2017 romain pillot
-** Last update Tue May 30 11:42:55 2017 romain pillot
+** Last update Sun Jun  4 16:58:21 2017 romain pillot
 */
 
 #ifndef UTIL_H_
@@ -28,6 +28,8 @@ bool	str_contains(const char *str, const char *charset);
 bool	str_equals(const char *a, const char *b);
 
 int	str_length(const char *str);
+
+int	tab_length(char **tab);
 
 char	*str_dupl(const char *str);
 
