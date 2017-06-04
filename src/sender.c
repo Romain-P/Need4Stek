@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Sat Jun  3 20:26:15 2017 romain pillot
-** Last update Sun Jun  4 16:58:58 2017 romain pillot
+** Last update Sun Jun  4 18:29:02 2017 romain pillot
 */
 
 #include "ai.h"
@@ -68,9 +68,11 @@ bool	send_message(const int msg_id,
 
   send_message_private(&(messages[msg_id]), param_int, param_float);
   split = get_data(0);
-  if (str_equals(split[1], COMMAND_FAILURE))
-    printf("error: %s\n", split[2]);
-  end = str_equals(split[tab_length(split) - 1], END);
+  if (!split || str_equals(split[1], COMMAND_FAILURE))
+    fprintf(stderr, "error: %s\n", split ? split[2] : "internal");
+  if (split)
+    fprintf(stderr, "received: %s\n", split[2]);
+  end = split ? str_equals(split[tab_length(split) - 1], END) : false;
   TAB_FREE(split);
   return (end);
 }
@@ -87,15 +89,15 @@ bool			get_float(const int msg_id,
   msg = &(messages[msg_id]);
   if (msg->answer_type != FLOAT)
     {
-      printf("sender: %s\n", "invalid answer type");
+      fprintf(stderr, "sender: %s\n", "invalid answer type");
       return (false);
     }
   send_message_private(msg, param_int, param_float);
   if (!(split = get_data(1)) || str_equals(split[1], COMMAND_FAILURE))
-    printf("error: %s\n", split ? split[2] : "internal");
+    fprintf(stderr, "error: %s\n", split ? split[2] : "internal");
   else
     *value = atof(split[3]);
-  end = str_equals(split[tab_length(split) - 1], END);
+  end = split ? str_equals(split[tab_length(split) - 1], END) : false;
   TAB_FREE(split);
   return (end);
 }
@@ -113,19 +115,19 @@ bool			get_float_array(const int msg_id,
   msg = &(messages[msg_id]);
   if (msg->answer_type != FLOAT_ARRAY)
     {
-      printf("sender: %s\n", "invalid answer type");
+      fprintf(stderr, "sender: %s\n", "invalid answer type");
       return (false);
     }
   send_message_private(msg, param_int, param_float);
   if (!(split = get_data(32)) || str_equals(split[1], COMMAND_FAILURE))
-    printf("error: %s\n", split ? split[2] : "internal");
+    fprintf(stderr, "error: %s\n", split ? split[2] : "internal");
   else
     {
       i = -1;
       while (++i < ARRAY_SIZE && split[i + 3])
 	array[i] = atof(split[i + 3]);
     }
-  end = str_equals(split[tab_length(split) - 1], END);
+  end = split ? str_equals(split[tab_length(split) - 1], END) : false;
   TAB_FREE(split);
   return (end);
 }

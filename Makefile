@@ -1,11 +1,11 @@
 ##
-## makefile for make in /home/jordan.roucom/CPool_rush3
+## Makefile for  in /home/romain.pillot/projects/n4s
 ## 
-## Made by Jordan Rouco miguez
-## Login   <jordan.roucom@epitech.net>
+## Made by romain pillot
+## Login   <romain.pillot@epitech.net>
 ## 
-## Started on  Sat Oct 29 17:09:21 2016 romain pillot
-## Last update Sat Jun  3 23:23:59 2017 romain pillot
+## Started on  Sun Jun  4 17:02:11 2017 romain pillot
+## Last update Sun Jun  4 18:05:22 2017 romain pillot
 ##
 
 CC	=	gcc
@@ -31,7 +31,7 @@ SRCS	=	src/main.c			\
 
 OBJS	=	$(SRCS:.c=.o)
 
-CFLAGS	+=	-Iinc -g3 -Werror -Wall -Wextra
+CFLAGS	+=	-Iinc -g3 #-Werror -Wall -Wextra
 
 all:	$(NAME)
 

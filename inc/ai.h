@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Tue May 23 14:02:04 2017 romain pillot
-** Last update Sun Jun  4 16:53:33 2017 romain pillot
+** Last update Sun Jun  4 19:44:37 2017 romain pillot
 */
 
 #ifndef AI_H_
@@ -22,12 +22,13 @@
 # define MESSAGE_FORWARD	(2)
 # define MESSAGE_BACKWARD	(3)
 # define MESSAGE_WHEELS_DIR	(4)
-# define MESSAGE_CURRENT_SPEED	(5)
-# define MESSAGE_CURRENT_WHEELS	(6)
-# define MESSAGE_CYCLE_WAIT	(7)
-# define MESSAGE_SPEED_MAX	(8)
-# define MESSAGE_SPEED_MIN	(9)
-# define MESSAGE_INFO_SIMETIME	(10)
+# define MESSAGE_INFO_LIDAR	(5)
+# define MESSAGE_CURRENT_SPEED	(6)
+# define MESSAGE_CURRENT_WHEELS	(7)
+# define MESSAGE_CYCLE_WAIT	(8)
+# define MESSAGE_SPEED_MAX	(9)
+# define MESSAGE_SPEED_MIN	(10)
+# define MESSAGE_INFO_SIMETIME	(11)
 
 # include <stdbool.h>
 
@@ -52,6 +53,10 @@ typedef struct		s_message
   const t_param		param_type;
   const t_answer	answer_type;
 }			t_message;
+
+/*
+** Return true if track cleared
+*/
 
 bool	get_float(const int msg_id,
 		  const int param_int,
