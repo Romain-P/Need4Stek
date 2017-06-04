@@ -5,13 +5,28 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Sat Jun  3 20:26:15 2017 romain pillot
-** Last update Sat Jun  3 23:24:49 2017 romain pillot
+** Last update Sun Jun  4 16:44:35 2017 romain pillot
 */
 
 #include "ai.h"
 #include "util.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+static t_message const  messages[] = {
+  {"START_SIMULATION", NONE, NO_ANSWER},
+  {"STOP_SIMULATION", NONE, NO_ANSWER},
+  {"CAR_FORWARD", FLOAT_PARAM, NO_ANSWER},
+  {"CAR_BACKWARD", FLOAT_PARAM, NO_ANSWER},
+  {"WHEELS_DIR", FLOAT_PARAM, NO_ANSWER},
+  {"GET_INFO_LIDAR", NONE, FLOAT_ARRAY},
+  {"GET_CURRENT_SPEED", NONE, FLOAT},
+  {"GET_CURRENT_WHEELS", NONE, FLOAT},
+  {"CYCLE_WAIT", INTEGER_PARAM, NO_ANSWER},
+  {"GET_CAR_SPEED_MAX", NONE, FLOAT},
+  {"GET_CAR_SPEED_MIN", NONE, FLOAT},
+  {"GET_INFO_SIMTIME", NONE, LONG_LONG}
+};
 
 static char	**get_data(const int answer_len)
 {
@@ -44,26 +59,28 @@ static void	send_message_private(const t_message *msg,
     printf("%s:%d\n", msg->data, param_int);
 }
 
-void	send_message(const t_message *msg,
+void	send_message(const int msg_id,
 		     const int param_int,
 		     const float param_float)
 {
   char	**split;
 
-  send_message_private(msg, param_int, param_float);
+  send_message_private(&(messages[msg_id]), param_int, param_float);
   split = get_data(0);
   if (str_equals(split[1], COMMAND_FAILURE))
     printf("error: %s\n", split[2]);
   TAB_FREE(split);
 }
 
-float	get_float(const t_message *msg,
-		  const int param_int,
-		  const float param_float)
+float			get_float(const int msg_id,
+				  const int param_int,
+				  const float param_float)
 {
-  char	**split;
-  float	value;
+  char			**split;
+  float			value;
+  const t_message	*msg;
 
+  msg = &(messages[msg_id]);
   if (msg->answer_type != FLOAT)
     {
       printf("sender: %s\n", "invalid answer type");
@@ -78,14 +95,16 @@ float	get_float(const t_message *msg,
   return (value);
 }
 
-void	get_float_array(const t_message *msg,
-			const int param_int,
-			const float param_float,
-			float array[32])
+void			get_float_array(const int msg_id,
+					const int param_int,
+					const float param_float,
+					float array[32])
 {
-  char	**split;
-  int	i;
+  char			**split;
+  int			i;
+  const t_message	*msg;
 
+  msg = &(messages[msg_id]);
   if (msg->answer_type != FLOAT_ARRAY)
     {
       printf("sender: %s\n", "invalid answer type");

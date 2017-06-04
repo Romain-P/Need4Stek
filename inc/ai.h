@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Tue May 23 14:02:04 2017 romain pillot
-** Last update Sat Jun  3 23:22:42 2017 romain pillot
+** Last update Sun Jun  4 16:41:02 2017 romain pillot
 */
 
 #ifndef AI_H_
@@ -50,16 +50,16 @@ typedef struct		s_message
   const t_answer	answer_type;
 }			t_message;
 
-float	get_float(const t_message *msg,
+float	get_float(const int msg_id,
 		  const int param_int,
 		  const float param_float);
 
-void	get_float_array(const t_message *msg,
+void	get_float_array(const int msg_id,
 			const int _int,
 			const float _float,
 			float array[42]);
 
-void	send_message(const t_message *msg,
+void	send_message(const int msg_id,
 		     const int _int,
 		     const float _float);
 
