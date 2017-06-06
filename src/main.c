@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Thu Nov 24 11:14:29 2016 romain pillot
-** Last update Tue Jun  6 21:18:51 2017 romain pillot
+** Last update Tue Jun  6 21:25:34 2017 romain pillot
 */
 
 #include "ai.h"
@@ -28,7 +28,7 @@ static void	turn_left(float angle, float speed)
 static void	forward(float speed)
 {
   send_message(MESSAGE_WHEELS_DIR, -1, 0);
-  send_message(MESSAGE_FORWARD, -1, 1);
+  send_message(MESSAGE_FORWARD, -1, speed);
 }
 
 static void	apply_ai(float rays[32])
@@ -52,10 +52,8 @@ static void	apply_ai(float rays[32])
 
 int	main()
 {
-  bool	running;
   float	rays[32];
 
-  running = true;
   setbuf(stdout, NULL);
   send_message(MESSAGE_START, -1, -1);
   while (true)
