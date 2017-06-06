@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Thu Nov 24 11:14:29 2016 romain pillot
-** Last update Sun Jun  4 19:46:44 2017 romain pillot
+** Last update Tue Jun  6 21:18:51 2017 romain pillot
 */
 
 #include "ai.h"
@@ -13,27 +13,41 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static void	wrap(bool end, bool *running)
+static void	turn_right(float angle, float speed)
 {
-  if (end)
-    {
-      *running = false;
-      exit(EXIT_SUCCESS);
-    }
+  send_message(MESSAGE_WHEELS_DIR, -1, -angle);
+  send_message(MESSAGE_FORWARD, -1, speed);
 }
 
-static bool	apply_ai(float rays[32])
+static void	turn_left(float angle, float speed)
 {
-  float		middle;
-  bool		priority;
+  send_message(MESSAGE_WHEELS_DIR, -1, angle);
+  send_message(MESSAGE_FORWARD, -1, speed);
+}
 
-  middle = (rays[15] + rays[16]) / 2.0;
-  fprintf(stderr, "gauche:%f\ndroite:%f\nmid:%f\n", rays[0], rays[31], middle);
-  if (rays[0] < 200)
-    send_message(MESSAGE_WHEELS_DIR, -1, 0.2);
-  else if (rays[31] < 200)
-    send_message(MESSAGE_WHEELS_DIR, -1, -0.2);
+static void	forward(float speed)
+{
+  send_message(MESSAGE_WHEELS_DIR, -1, 0);
   send_message(MESSAGE_FORWARD, -1, 1);
+}
+
+static void	apply_ai(float rays[32])
+{
+  float		warning;
+
+  warning = rays[15] < 200 || rays[31] < 200 || rays[0] < 200 ? 0.4 : 0;
+  if (rays[15] <= 80)
+    return (send_message(MESSAGE_BACKWARD, -1, 1));
+  if (rays[15] > 1200 && rays[0] > 150 && rays[31] > 150)
+    return (forward(1));
+  else if (rays[0] < 250 && rays[31] >= 250)
+    return (turn_right(0.2 + warning, 0.5 - warning));
+  else if (rays[31] < 250 && rays[0] >= 250)
+    return (turn_left(0.2 + warning, 0.5 - warning));
+  send_message(MESSAGE_WHEELS_DIR, -1, rays[0] >= rays[31] ?
+	       rays[31] < 200 ? 0.7 : 0.2 :
+	       rays[0] < 200 ? -0.7 : -0.2);
+  send_message(MESSAGE_FORWARD, -1, 0.5 - warning);
 }
 
 int	main()
@@ -44,9 +58,10 @@ int	main()
   running = true;
   setbuf(stdout, NULL);
   send_message(MESSAGE_START, -1, -1);
-  while (running &&
-	 !get_float_array(MESSAGE_INFO_LIDAR, -1, -1, rays))
-    running = !apply_ai(rays);
-  send_message(MESSAGE_STOP, -1, -1);
+  while (true)
+    {
+      get_float_array(MESSAGE_INFO_LIDAR, -1, -1, rays);
+      apply_ai(rays);
+    }
   return (EXIT_SUCCESS);
 }

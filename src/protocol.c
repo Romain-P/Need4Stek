@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Sat Jun  3 20:26:15 2017 romain pillot
-** Last update Sun Jun  4 18:29:02 2017 romain pillot
+** Last update Tue Jun  6 21:21:06 2017 romain pillot
 */
 
 #include "ai.h"
@@ -17,7 +17,7 @@ static t_message const  messages[] = {
   {"START_SIMULATION", NONE, NO_ANSWER},
   {"STOP_SIMULATION", NONE, NO_ANSWER},
   {"CAR_FORWARD", FLOAT_PARAM, NO_ANSWER},
-  {"CAR_BACKWARD", FLOAT_PARAM, NO_ANSWER},
+  {"CAR_BACKWARDS", FLOAT_PARAM, NO_ANSWER},
   {"WHEELS_DIR", FLOAT_PARAM, NO_ANSWER},
   {"GET_INFO_LIDAR", NONE, FLOAT_ARRAY},
   {"GET_CURRENT_SPEED", NONE, FLOAT},
@@ -41,7 +41,13 @@ static char	**get_data(const int answer_len)
   while (split && split[len] && ++len);
   if (len != 4 + answer_len)
     {
-      FREE(split);
+      if (len == 5 && split && str_equals(END, split[3]))
+	{
+	  TAB_FREE(split);
+	  send_message(MESSAGE_STOP, -1, -1);
+	  exit(EXIT_SUCCESS);
+	}
+      TAB_FREE(split);
       return (NULL);
     }
   return (split);
@@ -59,50 +65,42 @@ static void	send_message_private(const t_message *msg,
     printf("%s:%d\n", msg->data, param_int);
 }
 
-bool	send_message(const int msg_id,
+void	send_message(const int msg_id,
 		     const int param_int,
 		     const float param_float)
 {
   char	**split;
-  bool	end;
 
   send_message_private(&(messages[msg_id]), param_int, param_float);
   split = get_data(0);
   if (!split || str_equals(split[1], COMMAND_FAILURE))
     fprintf(stderr, "error: %s\n", split ? split[2] : "internal");
-  if (split)
-    fprintf(stderr, "received: %s\n", split[2]);
-  end = split ? str_equals(split[tab_length(split) - 1], END) : false;
   TAB_FREE(split);
-  return (end);
 }
 
-bool			get_float(const int msg_id,
+void			get_float(const int msg_id,
 				  const int param_int,
 				  const float param_float,
 				  float *value)
 {
   char			**split;
   const t_message	*msg;
-  bool			end;
 
   msg = &(messages[msg_id]);
   if (msg->answer_type != FLOAT)
     {
       fprintf(stderr, "sender: %s\n", "invalid answer type");
-      return (false);
+      return ;
     }
   send_message_private(msg, param_int, param_float);
   if (!(split = get_data(1)) || str_equals(split[1], COMMAND_FAILURE))
     fprintf(stderr, "error: %s\n", split ? split[2] : "internal");
   else
     *value = atof(split[3]);
-  end = split ? str_equals(split[tab_length(split) - 1], END) : false;
   TAB_FREE(split);
-  return (end);
 }
 
-bool			get_float_array(const int msg_id,
+void			get_float_array(const int msg_id,
 					const int param_int,
 					const float param_float,
 					float array[32])
@@ -110,13 +108,12 @@ bool			get_float_array(const int msg_id,
   char			**split;
   int			i;
   const t_message	*msg;
-  bool			end;
 
   msg = &(messages[msg_id]);
   if (msg->answer_type != FLOAT_ARRAY)
     {
       fprintf(stderr, "sender: %s\n", "invalid answer type");
-      return (false);
+      return ;
     }
   send_message_private(msg, param_int, param_float);
   if (!(split = get_data(32)) || str_equals(split[1], COMMAND_FAILURE))
@@ -127,7 +124,5 @@ bool			get_float_array(const int msg_id,
       while (++i < ARRAY_SIZE && split[i + 3])
 	array[i] = atof(split[i + 3]);
     }
-  end = split ? str_equals(split[tab_length(split) - 1], END) : false;
   TAB_FREE(split);
-  return (end);
 }

@@ -5,7 +5,7 @@
 ** Login   <romain.pillot@epitech.net>
 ** 
 ** Started on  Tue May 23 14:02:04 2017 romain pillot
-** Last update Sun Jun  4 19:44:37 2017 romain pillot
+** Last update Tue Jun  6 21:17:14 2017 romain pillot
 */
 
 #ifndef AI_H_
@@ -13,7 +13,7 @@
 
 # define COMMAND_SUCCESS	("OK")
 # define COMMAND_FAILURE	("KO")
-# define END			("Track Cleared")
+# define END			("Lap Cleared")
 
 # define ARRAY_SIZE		(32)
 
@@ -58,17 +58,17 @@ typedef struct		s_message
 ** Return true if track cleared
 */
 
-bool	get_float(const int msg_id,
+void	get_float(const int msg_id,
 		  const int param_int,
 		  const float param_float,
 		  float *value);
 
-bool	get_float_array(const int msg_id,
+void	get_float_array(const int msg_id,
 			const int _int,
 			const float _float,
 			float array[42]);
 
-bool	send_message(const int msg_id,
+void	send_message(const int msg_id,
 		     const int _int,
 		     const float _float);
 
